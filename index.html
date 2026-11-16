@@ -443,7 +443,7 @@
 
       .booking-form input:focus,
       .booking-form select:focus {
-        outline: 2px solid rgba(40,82,63,0.25);
+        outline: 2px solid rgba(32,186,250,0.3);
         border-color: var(--gold);
       }
 
@@ -576,7 +576,7 @@
 
           <div class="hero-visual">
             <div class="image-card">
-              <img src="WhatsApp Image 28.37.21.jpeg" alt="Fresh fade by h2_hamza" />
+              <img src="WhatsApp Image 2026-11-16 at 20.03.06.jpeg" alt="Fresh fade by H’s Sharp Cuts" />
             </div>
             <div class="floating-box">
               <span>Opening hours</span>
@@ -589,7 +589,7 @@
       <section id="about" class="section">
         <div class="container about-grid">
           <div class="about-img">
-            <img src="WhatsApp Image 2026-11-13 at 18.37.21.jpeg" alt="Haircut by h2_hamza" />
+            <img src="WhatsApp Image 2026-11-16 at 20.03.05.jpeg" alt="Haircut by H’s Sharp Cuts" />
           </div>
 
           <div class="about-content">
@@ -672,9 +672,8 @@
           </div>
 
           <div class="gallery-grid">
-            <img src="WhatsApp Image 2026-11-13 at 18.37.22.jpeg" alt="Fresh fade haircut" />
-            <img src="What 18.37.22.jpeg" alt="Haircut close up" />
-            <img src="WhatsApp Image 2026-11-1t 18.37.22.jpeg" alt="Barber chair cut" />
+            <img src="WhatsApp Image 2026-11-16 at 20.03.05.jpeg" alt="Fresh fade haircut" />
+            <img src="WhatsApp Image 2026-11-16 at 20.03.06.jpeg" alt="Skin fade haircut" />
           </div>
         </div>
       </section>
@@ -690,7 +689,7 @@
 
             <div class="times">
               <div><strong>Monday & Friday:</strong> 4:30 PM - 6:30 PM</div>
-              <div><strong>Saturday & Sunday:</strong> 11:30 AM - 6:30 PM</div>
+              <div><strong>Saturday & Sunday:</strong> 11:30 AM - 6:00 PM</div>
               <div><strong>Location:</strong> Rochdale</div>
               <div><strong>WhatsApp:</strong> +44 7450 892082</div>
               <div><strong>Snap:</strong> h2_hamza25</div>
@@ -714,6 +713,12 @@
               Preferred Date
               <input type="date" name="date" required />
             </label>
+            <label>
+              Preferred Time
+              <select name="time" required disabled>
+                <option value="">Choose a date first</option>
+              </select>
+            </label>
             <button type="submit" class="button primary">Confirm Booking</button>
           </form>
         </div>
@@ -731,7 +736,7 @@
           <div><strong>Location:</strong> Rochdale</div>
           <div><strong>WhatsApp:</strong> +44 7450 892082</div>
           <div><strong>Snap:</strong> h2_hamza25</div>
-          <div><strong>Hours:</strong> Mon & Fri 4:30-6:30, Sat & Sun 11:30-6:30</div>
+          <div><strong>Hours:</strong> Mon & Fri 4:30-6:30, Sat & Sun 11:30-6</div>
         </div>
 
         <div class="socials">
@@ -746,16 +751,60 @@
         const form = document.getElementById('bookingForm');
 
         if (form) {
+          const dateInput = form.elements.date;
+          const timeSelect = form.elements.time;
+          const today = new Date();
+          today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+          dateInput.min = today.toISOString().slice(0, 10);
+
+          const slotsByDay = {
+            0: ['11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30'],
+            1: ['16:30', '17:00', '17:30', '18:00'],
+            5: ['16:30', '17:00', '17:30', '18:00'],
+            6: ['11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30']
+          };
+
+          const updateTimeOptions = () => {
+            timeSelect.replaceChildren(new Option('Choose a time', ''));
+
+            if (!dateInput.value) {
+              timeSelect.disabled = true;
+              dateInput.setCustomValidity('');
+              timeSelect.options[0].textContent = 'Choose a date first';
+              return;
+            }
+
+            const selectedDay = new Date(`${dateInput.value}T12:00:00`).getDay();
+            const slots = slotsByDay[selectedDay];
+
+            if (!slots) {
+              timeSelect.disabled = true;
+              timeSelect.options[0].textContent = 'Closed on this day';
+              dateInput.setCustomValidity('Appointments are available Monday, Friday, Saturday and Sunday.');
+              return;
+            }
+
+            dateInput.setCustomValidity('');
+            timeSelect.disabled = false;
+            for (const slot of slots) {
+              const label = new Date(`1970-01-01T${slot}:00`).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+              timeSelect.add(new Option(label, slot));
+            }
+          };
+
+          dateInput.addEventListener('change', updateTimeOptions);
+
           form.addEventListener('submit', async (event) => {
             event.preventDefault();
 
             const name = form.elements.name.value.trim();
             const service = form.elements.service.value;
             const date = form.elements.date.value;
+            const time = form.elements.time.value;
 
-            if (!name || !date) return;
+            if (!name || !date || !time) return;
 
-            const bookingText = `Hi H's Sharp Cuts, I want to book an appointment.\nName: ${name}\nService: ${service}\nDate: ${date}\nPlease confirm the slot.`;
+            const bookingText = `Hi H's Sharp Cuts, I want to book an appointment.\nName: ${name}\nService: ${service}\nDate: ${date}\nTime: ${time}\nPlease confirm the slot.`;
 
             const button = form.querySelector('button[type="submit"]');
             const original = button.textContent;
