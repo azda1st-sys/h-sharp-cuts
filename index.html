@@ -580,7 +580,7 @@
             </div>
             <div class="floating-box">
               <span>Opening hours</span>
-              <strong>Mon & Fri: 4:30-6:30 PM<br />Sat & Sun: 11:30 AM-6:00 PM</strong>
+              <strong>Mon-Fri: 4:30-6:00 PM<br />Sat & Sun: 11:30 AM-6:00 PM</strong>
             </div>
           </div>
         </div>
@@ -688,7 +688,7 @@
             </p>
 
             <div class="times">
-              <div><strong>Monday & Friday:</strong> 4:30 PM - 6:30 PM</div>
+              <div><strong>Monday-Friday:</strong> 4:30 PM - 6:00 PM</div>
               <div><strong>Saturday & Sunday:</strong> 11:30 AM - 6:00 PM</div>
               <div><strong>Location:</strong> Rochdale</div>
               <div><strong>WhatsApp:</strong> +44 7450 892082</div>
@@ -736,7 +736,7 @@
           <div><strong>Location:</strong> Rochdale</div>
           <div><strong>WhatsApp:</strong> +44 7450 892082</div>
           <div><strong>Snap:</strong> h2_hamza25</div>
-          <div><strong>Hours:</strong> Mon & Fri 4:30-6:30, Sat & Sun 11:30-6</div>
+          <div><strong>Hours:</strong> Mon-Fri 4:30-6, Sat & Sun 11:30-6</div>
         </div>
 
         <div class="socials">
@@ -759,8 +759,11 @@
 
           const slotsByDay = {
             0: ['11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30'],
-            1: ['16:30', '17:00', '17:30', '18:00'],
-            5: ['16:30', '17:00', '17:30', '18:00'],
+            1: ['16:30', '17:00', '17:30'],
+            2: ['16:30', '17:00', '17:30'],
+            3: ['16:30', '17:00', '17:30'],
+            4: ['16:30', '17:00', '17:30'],
+            5: ['16:30', '17:00', '17:30'],
             6: ['11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30']
           };
 
@@ -780,7 +783,7 @@
             if (!slots) {
               timeSelect.disabled = true;
               timeSelect.options[0].textContent = 'Closed on this day';
-              dateInput.setCustomValidity('Appointments are available Monday, Friday, Saturday and Sunday.');
+              dateInput.setCustomValidity('Appointments are available Monday to Friday and on weekends.');
               return;
             }
 
